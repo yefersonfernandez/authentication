@@ -29,6 +29,12 @@ management:
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
 
+springdoc:
+  swagger-ui:
+    path: "/api/doc/swagger-ui.html"
+  api-docs:
+    path: "/api/doc/api-docs"
+
 routes:
   paths:
     users: "/api/v1/users"

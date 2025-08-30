@@ -54,15 +54,17 @@ class UserRepositoryAdapterTest {
                 .baseSalary(new BigDecimal(5000))
                 .build();
 
-        userEntity = new UserEntity();
-        userEntity.setFirstName(user.getFirstName());
-        userEntity.setLastName(user.getLastName());
-        userEntity.setBirthDate(user.getBirthDate());
-        userEntity.setAddress(user.getAddress());
-        userEntity.setPhone(user.getPhone());
-        userEntity.setIdentityDocument(user.getIdentityDocument());
-        userEntity.setEmail(user.getEmail());
-        userEntity.setBaseSalary(user.getBaseSalary());
+        userEntity = UserEntity.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .birthDate(user.getBirthDate())
+                .address(user.getAddress())
+                .phone(user.getPhone())
+                .identityDocument(user.getIdentityDocument())
+                .email(user.getEmail())
+                .baseSalary(user.getBaseSalary())
+                .build();
+
 
         lenient().when(transactionalOperator.transactional(any(Mono.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));

@@ -22,39 +22,40 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
         Throwable error = getError(request);
-        CustomError customError;
+        return switch (error) {
+            case BusinessException businessException -> buildErrorResponse(
+                    businessException.getStatusCode().getStatusCode(),
+                    businessException.getStatusCode().name(),
+                    businessException.getMessage(),
+                    request.path(),
+                    null
+            );
 
-        if (error instanceof BusinessException businessException) {
-            customError = CustomError.builder()
-                    .statusCode(businessException.getStatusCode().getStatusCode())
-                    .error(businessException.getStatusCode().name())
-                    .message(businessException.getMessage())
-                    .path(request.path())
-                    .timestamp(LocalDateTime.now())
-                    .build();
+            case ConstraintViolationException violationException -> buildErrorResponse(
+                    HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.name(),
+                    "Validation failed for one or more fields",
+                    request.path(),
+                    toListErrors(violationException.getConstraintViolations())
+            );
 
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", customError);
-            return errorResponse;
+            default -> super.getErrorAttributes(request, options);
+        };
+    }
 
-        } else if (error instanceof ConstraintViolationException violationException) {
-            List<String> errors = toListErrors(violationException.getConstraintViolations());
+    private Map<String, Object> buildErrorResponse(int statusCode, String error, String message, String path, List<String> errors) {
+        CustomError customError = CustomError.builder()
+                .statusCode(statusCode)
+                .error(error)
+                .message(message)
+                .errors(errors)
+                .path(path)
+                .timestamp(LocalDateTime.now())
+                .build();
 
-            customError = CustomError.builder()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .error(HttpStatus.BAD_REQUEST.name())
-                    .message("Validation failed for one or more fields")
-                    .errors(errors)
-                    .path(request.path())
-                    .timestamp(LocalDateTime.now())
-                    .build();
-
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", customError);
-            return errorResponse;
-        }
-
-        return super.getErrorAttributes(request, options);
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("error", customError);
+        return errorResponse;
     }
 
     private List<String> toListErrors(Set<ConstraintViolation<?>> violations) {
