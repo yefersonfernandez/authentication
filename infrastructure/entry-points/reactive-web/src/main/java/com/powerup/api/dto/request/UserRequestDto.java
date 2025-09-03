@@ -39,8 +39,16 @@ public record UserRequestDto(
         @Schema(description = "User's email address", example = "andres@gmail.com")
         String email,
 
+        @NotBlank(message = "Password cannot be blank")
+        @Schema(description = "User's password", example = "MySecret123")
+        String password,
+
         @NotNull(message = "Base salary cannot be null")
         @Schema(description = "User's base salary", example = "50000")
-        BigDecimal baseSalary
+        BigDecimal baseSalary,
+
+        @NotNull(message = "Role ID cannot be null")
+        @Schema(description = "Role ID assigned to the user", example = "1")
+        Long roleId
 
 ) {}

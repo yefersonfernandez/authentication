@@ -39,3 +39,12 @@ routes:
   paths:
     users: "/api/v1/users"
     userByIdentityDocument: "/api/v1/users/userByIdentityDocument/{identityDocument}"
+    login: "/api/v1/login"
+
+security:
+  jwt:
+    keys-location:
+      private: classpath:keys/private_key.pem
+      public: classpath:keys/public_key.pem
+    expiration: 900000
+

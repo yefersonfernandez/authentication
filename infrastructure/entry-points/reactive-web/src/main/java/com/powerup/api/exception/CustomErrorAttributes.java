@@ -39,7 +39,13 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
                     toListErrors(violationException.getConstraintViolations())
             );
 
-            default -> super.getErrorAttributes(request, options);
+            default -> buildErrorResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.name(),
+                    error.getMessage(),
+                    request.path(),
+                    null
+            );
         };
     }
 

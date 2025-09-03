@@ -7,4 +7,5 @@ public interface IUserRepositoryPort {
     Mono<User> saveUser(User user);
     Mono<Boolean> existsByEmail(String email);
     Mono<User> findUserByIdentityDocument(String identityDocument);
+    Mono<User> findByEmail(String email);
 }

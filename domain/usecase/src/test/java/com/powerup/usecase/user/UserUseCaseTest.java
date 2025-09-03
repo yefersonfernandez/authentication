@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.powerup.exception.IdentityDocumentNotFoundException;
+import com.powerup.model.user.gateways.IPasswordEncoderPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,9 @@ class UserUseCaseTest {
     @Mock
     private IUserRepositoryPort userRepository;
 
+    @Mock
+    private IPasswordEncoderPort passwordEncoderPort;
+
     @InjectMocks
     private UserUseCase userUseCase;
 
@@ -41,6 +45,7 @@ class UserUseCaseTest {
                 .identityDocument("123")
                 .email("andres@gmail.com")
                 .baseSalary(new BigDecimal(5000))
+                .password("123")
                 .build();
     }
 
@@ -48,6 +53,7 @@ class UserUseCaseTest {
     @DisplayName("Must save a user successfully")
     void testSaveUser() {
         when(userRepository.existsByEmail(user.getEmail())).thenReturn(Mono.just(false));
+        when(passwordEncoderPort.encode(user.getPassword())).thenReturn("encodedPassword");
         when(userRepository.saveUser(user)).thenReturn(Mono.just(user));
 
         StepVerifier.create(userUseCase.saveUser(user).log())
@@ -59,7 +65,6 @@ class UserUseCaseTest {
     @DisplayName("Must return error if email already exists")
     void testSaveUserWithEmailAlreadyExists() {
         when(userRepository.existsByEmail(user.getEmail())).thenReturn(Mono.just(true));
-        when(userRepository.saveUser(user)).thenReturn(Mono.just(user));
 
         StepVerifier.create(userUseCase.saveUser(user))
                 .expectError(EmailAlreadyExistsException.class)
@@ -72,7 +77,6 @@ class UserUseCaseTest {
         user.setBaseSalary(new BigDecimal(-100));
 
         when(userRepository.existsByEmail(user.getEmail())).thenReturn(Mono.just(false));
-        when(userRepository.saveUser(user)).thenReturn(Mono.just(user));
 
         StepVerifier.create(userUseCase.saveUser(user))
                 .expectError(InvalidSalaryRangeException.class)
@@ -85,7 +89,6 @@ class UserUseCaseTest {
         user.setBaseSalary(new BigDecimal(20_000_000));
 
         when(userRepository.existsByEmail(user.getEmail())).thenReturn(Mono.just(false));
-        when(userRepository.saveUser(user)).thenReturn(Mono.just(user));
 
         StepVerifier.create(userUseCase.saveUser(user))
                 .expectError(InvalidSalaryRangeException.class)

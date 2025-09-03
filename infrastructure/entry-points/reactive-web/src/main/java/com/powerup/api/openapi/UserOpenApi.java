@@ -3,7 +3,6 @@ package com.powerup.api.openapi;
 import com.powerup.api.dto.error.CustomError;
 import com.powerup.api.dto.request.UserRequestDto;
 import com.powerup.api.dto.response.UserResponseDto;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.experimental.UtilityClass;
 import org.springdoc.core.fn.builders.operation.Builder;
 import org.springframework.http.HttpStatus;
@@ -14,6 +13,7 @@ import static org.springdoc.core.fn.builders.content.Builder.contentBuilder;
 import static org.springdoc.core.fn.builders.parameter.Builder.parameterBuilder;
 import static org.springdoc.core.fn.builders.requestbody.Builder.requestBodyBuilder;
 import static org.springdoc.core.fn.builders.schema.Builder.schemaBuilder;
+import static org.springdoc.core.fn.builders.securityrequirement.Builder.securityRequirementBuilder;
 
 @UtilityClass
 public class UserOpenApi {
@@ -21,18 +21,18 @@ public class UserOpenApi {
     private final String TAG = "User";
     private final String SUCCESS = "Success";
     private final String SUCCESS_CODE = String.valueOf(HttpStatus.OK.value());
-    private final String BAD_REQUEST = HttpStatus.BAD_REQUEST.getReasonPhrase();
     private final String BAD_REQUEST_CODE = String.valueOf(HttpStatus.BAD_REQUEST.value());
-    private final String CONFLICT = HttpStatus.CONFLICT.getReasonPhrase();
     private final String CONFLICT_CODE = String.valueOf(HttpStatus.CONFLICT.value());
-    private final String NOT_FOUND = HttpStatus.NOT_FOUND.getReasonPhrase();
     private final String NOT_FOUND_CODE = String.valueOf(HttpStatus.NOT_FOUND.value());
+    private final String UNAUTHORIZED_CODE = String.valueOf(HttpStatus.UNAUTHORIZED.value());
+    private final String FORBIDDEN_CODE = String.valueOf(HttpStatus.FORBIDDEN.value());
 
     public Builder saveUser(Builder builder) {
         return builder
                 .operationId("saveUser")
                 .description("Registers a new user after validating unique email and salary range")
                 .tag(TAG)
+                .security(securityRequirementBuilder().name("bearerAuth"))
                 .requestBody(requestBodyBuilder()
                         .required(true)
                         .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,10 +40,20 @@ public class UserOpenApi {
                 .response(responseBuilder().responseCode(SUCCESS_CODE).description("User registered successfully")
                         .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
                                 .schema(schemaBuilder().implementation(UserResponseDto.class))))
-                .response(responseBuilder().responseCode(BAD_REQUEST_CODE).description(BAD_REQUEST)
+                .response(responseBuilder().responseCode(BAD_REQUEST_CODE)
+                        .description(HttpStatus.BAD_REQUEST.getReasonPhrase())
                         .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
                                 .schema(schemaBuilder().implementation(CustomError.class))))
-                .response(responseBuilder().responseCode(CONFLICT_CODE).description(CONFLICT)
+                .response(responseBuilder().responseCode(CONFLICT_CODE)
+                        .description(HttpStatus.CONFLICT.getReasonPhrase())
+                        .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
+                                .schema(schemaBuilder().implementation(CustomError.class))))
+                .response(responseBuilder().responseCode(UNAUTHORIZED_CODE)
+                        .description(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                        .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
+                                .schema(schemaBuilder().implementation(CustomError.class))))
+                .response(responseBuilder().responseCode(FORBIDDEN_CODE)
+                        .description(HttpStatus.FORBIDDEN.getReasonPhrase())
                         .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
                                 .schema(schemaBuilder().implementation(CustomError.class))));
     }
@@ -53,6 +63,7 @@ public class UserOpenApi {
                 .operationId("findUserByIdentityDocument")
                 .description("Retrieves a user by identity document")
                 .tag(TAG)
+                .security(securityRequirementBuilder().name("bearerAuth"))
                 .parameter(parameterBuilder()
                         .name("identityDocument")
                         .description("Identity document of the user")
@@ -62,10 +73,12 @@ public class UserOpenApi {
                 .response(responseBuilder().responseCode(SUCCESS_CODE).description(SUCCESS)
                         .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
                                 .schema(schemaBuilder().implementation(UserResponseDto.class))))
-                .response(responseBuilder().responseCode(NOT_FOUND_CODE).description(NOT_FOUND)
+                .response(responseBuilder().responseCode(NOT_FOUND_CODE)
+                        .description(HttpStatus.NOT_FOUND.getReasonPhrase())
                         .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
                                 .schema(schemaBuilder().implementation(CustomError.class))))
-                .response(responseBuilder().responseCode(BAD_REQUEST_CODE).description(BAD_REQUEST)
+                .response(responseBuilder().responseCode(BAD_REQUEST_CODE)
+                        .description(HttpStatus.BAD_REQUEST.getReasonPhrase())
                         .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
                                 .schema(schemaBuilder().implementation(CustomError.class))));
     }

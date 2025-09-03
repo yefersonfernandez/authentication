@@ -1,4 +1,4 @@
-package com.powerup.api;
+package com.powerup.api.user;
 
 import com.powerup.api.dto.request.UserRequestDto;
 import com.powerup.api.mapper.IUserMapper;

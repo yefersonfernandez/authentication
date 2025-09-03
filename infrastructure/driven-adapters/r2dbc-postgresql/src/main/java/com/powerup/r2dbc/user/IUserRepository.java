@@ -1,4 +1,4 @@
-package com.powerup.r2dbc;
+package com.powerup.r2dbc.user;
 
 import com.powerup.model.user.User;
 import com.powerup.r2dbc.entity.UserEntity;
@@ -9,4 +9,6 @@ import reactor.core.publisher.Mono;
 public interface IUserRepository extends ReactiveCrudRepository<UserEntity, Long>, ReactiveQueryByExampleExecutor<UserEntity> {
     Mono<Boolean> existsByEmail(String email);
     Mono<User>findByIdentityDocument(String identityDocument);
+    Mono<User>findByEmail(String email);
+
 }

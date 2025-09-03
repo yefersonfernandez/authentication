@@ -1,6 +1,5 @@
-package com.powerup.r2dbc;
+package com.powerup.r2dbc.user;
 
-import com.powerup.exception.IdentityDocumentNotFoundException;
 import com.powerup.model.user.User;
 import com.powerup.r2dbc.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -110,6 +109,27 @@ class UserRepositoryAdapterTest {
 
         StepVerifier.create(repositoryAdapter.findUserByIdentityDocument(user.getIdentityDocument()))
                 .expectNext(user)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should return user when email exists")
+    void testFindByEmailSuccess() {
+        when(repository.findByEmail(user.getEmail()))
+                .thenReturn(Mono.just(user));
+
+        StepVerifier.create(repositoryAdapter.findByEmail(user.getEmail()))
+                .expectNext(user)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should return empty when email does not exist")
+    void testFindByEmailNotFound() {
+        when(repository.findByEmail(user.getEmail()))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(repositoryAdapter.findByEmail(user.getEmail()))
                 .verifyComplete();
     }
 }

@@ -1,6 +1,6 @@
-package com.powerup.api;
+package com.powerup.api.user;
 
-import com.powerup.api.config.UserPath;
+import com.powerup.api.config.ApiPaths;
 import com.powerup.api.openapi.UserOpenApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,15 +12,15 @@ import static org.springdoc.webflux.core.fn.SpringdocRouteBuilder.route;
 
 @Configuration
 @RequiredArgsConstructor
-public class RouterRest {
+public class UserRouterRest {
 
-    private final UserPath userPath;
+    private final ApiPaths apiPaths;
 
     @Bean
-    public RouterFunction<ServerResponse> routerFunction(UserHandler handler) {
+    public RouterFunction<ServerResponse> userRouterFunction(UserHandler handler) {
         return route()
-                .POST(userPath.getUsers(), handler::listenSaveUser, UserOpenApi::saveUser)
-                .GET(userPath.getUserByIdentityDocument(), handler::listenFindUserByIdentityDocument, UserOpenApi::findUserByIdentityDocument)
+                .POST(apiPaths.getUsers(), handler::listenSaveUser, UserOpenApi::saveUser)
+                .GET(apiPaths.getUserByIdentityDocument(), handler::listenFindUserByIdentityDocument, UserOpenApi::findUserByIdentityDocument)
                 .build();
     }
 }

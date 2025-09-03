@@ -1,4 +1,4 @@
-package com.powerup.r2dbc;
+package com.powerup.r2dbc.user;
 
 import com.powerup.model.user.User;
 import com.powerup.model.user.gateways.IUserRepositoryPort;
@@ -28,5 +28,10 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<User, UserE
     @Override
     public Mono<User> findUserByIdentityDocument(String identityDocument) {
         return repository.findByIdentityDocument(identityDocument);
+    }
+
+    @Override
+    public Mono<User> findByEmail(String email) {
+        return repository.findByEmail(email);
     }
 }
