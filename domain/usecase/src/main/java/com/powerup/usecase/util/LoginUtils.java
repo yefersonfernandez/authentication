@@ -5,8 +5,7 @@ import com.powerup.exception.InvalidCredentialsException;
 import reactor.core.publisher.Mono;
 
 public class LoginUtils {
-    private LoginUtils() {
-    }
+    private LoginUtils() {}
 
     public static <T> Mono<T> invalidCredentials() {
         return Mono.error(new InvalidCredentialsException(

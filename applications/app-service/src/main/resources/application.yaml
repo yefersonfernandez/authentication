@@ -39,6 +39,7 @@ routes:
   paths:
     users: "/api/v1/users"
     userByIdentityDocument: "/api/v1/users/userByIdentityDocument/{identityDocument}"
+    userByEmail: "/api/v1/users/userByEmail/{email}"
     login: "/api/v1/login"
 
 security:

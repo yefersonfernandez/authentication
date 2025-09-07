@@ -21,6 +21,7 @@ public class UserRouterRest {
         return route()
                 .POST(apiPaths.getUsers(), handler::listenSaveUser, UserOpenApi::saveUser)
                 .GET(apiPaths.getUserByIdentityDocument(), handler::listenFindUserByIdentityDocument, UserOpenApi::findUserByIdentityDocument)
+                .GET(apiPaths.getUserByEmail(), handler::listenFindUserByEmail, UserOpenApi::findUserByEmail)
                 .build();
     }
 }

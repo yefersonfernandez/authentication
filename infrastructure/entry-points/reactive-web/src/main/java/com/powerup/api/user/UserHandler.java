@@ -44,4 +44,14 @@ public class UserHandler {
                                 .bodyValue(user)
                 );
     }
+
+    public Mono<ServerResponse> listenFindUserByEmail(ServerRequest serverRequest) {
+        String email = serverRequest.pathVariable("email");
+        return userUseCase.findUserByEmail(email)
+                .flatMap(user ->
+                        ServerResponse.ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(user)
+                );
+    }
 }

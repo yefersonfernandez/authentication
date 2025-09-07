@@ -2,6 +2,7 @@ package com.powerup.usecase.user;
 
 import com.powerup.enums.ExceptionMessages;
 import com.powerup.exception.EmailAlreadyExistsException;
+import com.powerup.exception.EmailNotFoundException;
 import com.powerup.exception.IdentityDocumentNotFoundException;
 import com.powerup.model.user.User;
 import com.powerup.model.user.gateways.IPasswordEncoderPort;
@@ -27,7 +28,12 @@ public class UserUseCase {
 
     public Mono<User> findUserByIdentityDocument(String identityDocument) {
         return userRepository.findUserByIdentityDocument(identityDocument)
-                .switchIfEmpty( Mono.error(() -> new IdentityDocumentNotFoundException(ExceptionMessages.USER_NOT_FOUND.format(identityDocument))));
+                .switchIfEmpty(Mono.error(() -> new IdentityDocumentNotFoundException(ExceptionMessages.USER_NOT_FOUND_BY_DOCUMENT.format(identityDocument))));
+    }
+
+    public Mono<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .switchIfEmpty(Mono.error(() -> new EmailNotFoundException(ExceptionMessages.USER_NOT_FOUND_BY_EMAIL.format(email))));
     }
 
     private Mono<Void> validateEmail(String email) {

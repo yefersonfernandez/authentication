@@ -10,5 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApiPaths {
     private String users;
     private String userByIdentityDocument;
+    private String userByEmail;
     private String login;
 }

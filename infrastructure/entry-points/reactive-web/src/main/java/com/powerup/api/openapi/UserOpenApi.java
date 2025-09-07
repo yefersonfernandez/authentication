@@ -82,4 +82,29 @@ public class UserOpenApi {
                         .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
                                 .schema(schemaBuilder().implementation(CustomError.class))));
     }
+
+    public Builder findUserByEmail(Builder builder) {
+        return builder
+                .operationId("findUserByEmail")
+                .description("Retrieves a user by email")
+                .tag(TAG)
+                .security(securityRequirementBuilder().name("bearerAuth"))
+                .parameter(parameterBuilder()
+                        .name("email")
+                        .description("email of the user")
+                        .required(true)
+                        .in(io.swagger.v3.oas.annotations.enums.ParameterIn.PATH)
+                        .schema(schemaBuilder().implementation(String.class)))
+                .response(responseBuilder().responseCode(SUCCESS_CODE).description(SUCCESS)
+                        .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
+                                .schema(schemaBuilder().implementation(UserResponseDto.class))))
+                .response(responseBuilder().responseCode(NOT_FOUND_CODE)
+                        .description(HttpStatus.NOT_FOUND.getReasonPhrase())
+                        .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
+                                .schema(schemaBuilder().implementation(CustomError.class))))
+                .response(responseBuilder().responseCode(BAD_REQUEST_CODE)
+                        .description(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                        .content(contentBuilder().mediaType(MediaType.APPLICATION_JSON_VALUE)
+                                .schema(schemaBuilder().implementation(CustomError.class))));
+    }
 }
