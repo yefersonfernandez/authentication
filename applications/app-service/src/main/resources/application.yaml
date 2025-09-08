@@ -1,21 +1,11 @@
 server:
   port: 8080
+
 spring:
   application:
     name: "authentication"
   devtools:
     add-properties: false
-  profiles:
-    include: null
-
-adapters:
-  r2dbc:
-    host: "localhost"
-    port: 5432
-    database: "users"
-    schema: "public"
-    username: "sm"
-    password: "1234"
 
 management:
   endpoints:
@@ -26,8 +16,18 @@ management:
     health:
       probes:
         enabled: true
+
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+
+adapters:
+  r2dbc:
+    host: ${SPRING_R2DBC_PORT_REQUEST:localhost}
+    port: ${SPRING_R2DBC_PORT_AUTH:5432}
+    database: ${SPRING_R2DBC_DATABASE_AUTH:users}
+    schema: "public"
+    username: ${SPRING_R2DBC_USERNAME_AUTH:sm}
+    password: ${SPRING_R2DBC_PASSWORD_AUTH:1234}
 
 springdoc:
   swagger-ui:
@@ -45,7 +45,6 @@ routes:
 security:
   jwt:
     keys-location:
-      private: classpath:keys/private_key.pem
-      public: classpath:keys/public_key.pem
+      private: ${JWT_PRIVATE_KEY:classpath:keys/private_key.pem}
+      public: ${JWT_PUBLIC_KEY:classpath:keys/public_key.pem}
     expiration: 900000
-
