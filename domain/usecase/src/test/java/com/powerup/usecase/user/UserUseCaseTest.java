@@ -3,6 +3,7 @@ package com.powerup.usecase.user;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.powerup.exception.EmailNotFoundException;
 import com.powerup.exception.IdentityDocumentNotFoundException;
 import com.powerup.model.user.gateways.IPasswordEncoderPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -118,6 +119,32 @@ class UserUseCaseTest {
 
         StepVerifier.create(userUseCase.findUserByIdentityDocument(user.getIdentityDocument()))
                 .expectError(IdentityDocumentNotFoundException.class)
+                .verify();
+    }
+
+    @Test
+    @DisplayName("Must return user when email exists")
+    void testFindUserByEmailSuccess() {
+        user.setEmail("prueba@gmail.com");
+
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Mono.just(user));
+
+        StepVerifier.create(userUseCase.findUserByEmail(user.getEmail()))
+                .expectNext(user)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Must return error when email does not exist")
+    void testFindUserByEmailNotFound() {
+        user.setEmail("noexists@gmail.com");
+
+        when(userRepository.findByEmail("noexists@gmail.com"))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(userUseCase.findUserByEmail(user.getEmail()))
+                .expectError(EmailNotFoundException.class)
                 .verify();
     }
 

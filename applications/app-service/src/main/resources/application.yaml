@@ -22,7 +22,7 @@ cors:
 
 adapters:
   r2dbc:
-    host: ${SPRING_R2DBC_PORT_REQUEST:localhost}
+    host: ${SPRING_R2DBC_HOST_AUTH:localhost}
     port: ${SPRING_R2DBC_PORT_AUTH:5432}
     database: ${SPRING_R2DBC_DATABASE_AUTH:users}
     schema: "public"
