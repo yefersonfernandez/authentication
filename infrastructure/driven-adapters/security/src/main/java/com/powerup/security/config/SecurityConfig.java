@@ -42,6 +42,7 @@ public class SecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers(HttpMethod.GET, ACTUATOR_HEALTH_URL).permitAll()
                         .pathMatchers(HttpMethod.POST, LOGIN_URL).permitAll()
                         .pathMatchers(PUBLIC_SWAGGER_PATHS).permitAll()
                         .pathMatchers(HttpMethod.POST, USER_CREATION_URL).hasAnyRole(ROLE_ADMIN, ROLE_ADVISOR)

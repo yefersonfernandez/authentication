@@ -15,10 +15,11 @@ public final class SecurityConstants {
     public static final String ROLE_PREFIX = "ROLE_";
     public static final String CLAIM_ROLE = "role";
 
-    public static final String LOGIN_URL = "/api/v1/login";
-    public static final String USER_CREATION_URL = "/api/v1/users";
+    public static final String ACTUATOR_HEALTH_URL = "/auth/actuator/health";
+    public static final String LOGIN_URL = "/auth/api/v1/login";
+    public static final String USER_CREATION_URL = "/auth/api/v1/users";
     public static final String[] PUBLIC_SWAGGER_PATHS = {
-            "/api/doc/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"
+            "/auth/api/doc/**", "/auth/v3/api-docs/**",
+            "/auth/swagger-ui.html", "/auth/swagger-ui/**"
     };
-
 }

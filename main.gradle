@@ -105,8 +105,21 @@ tasks.register('jacocoMergedReport', JacocoReport) {
                         '**/com/powerup/security/config/**',
                         '**/com/powerup/security/exception/**',
                         '**/com/powerup/security/constants/**',
+                        '**/com/powerup/security/jwt/**',
+                        '**/com/powerup/security/encoder/**',
                         '**/com/powerup/api/config/**',
                         '**/com/powerup/sqs/sender/config/**',
+                        '**/com/powerup/api/openapi/**',
+                        '**/com/powerup/api/exception/**',
+                        '**/com/powerup/api/mapper/**',
+                        '**/com/powerup/api/user/**',
+                        '**/com/powerup/api/login/**',
+                        '**/com/powerup/api/dto/request/**',
+                        '**/com/powerup/api/dto/response/**',
+                        '**/com/powerup/api/util/**',
+                        '**/com/powerup/r2dbc/config/**',
+                        '**/com/powerup/*.class',
+                        '**/com/powerup/config/**'
                 ])
             }
     )

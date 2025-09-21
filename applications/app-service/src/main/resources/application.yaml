@@ -1,5 +1,7 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT}
+  servlet:
+    context-path: ${SERVER_CONTEXT_PATH}
 
 spring:
   application:
@@ -10,6 +12,7 @@ spring:
 management:
   endpoints:
     web:
+      base-path: ${SERVER_ACTUATOR_PATH}
       exposure:
         include: "health,prometheus"
   endpoint:
@@ -18,33 +21,33 @@ management:
         enabled: true
 
 cors:
-  allowed-origins: "http://localhost:4200,http://localhost:8080"
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
 adapters:
   r2dbc:
-    host: ${SPRING_R2DBC_HOST_AUTH:localhost}
-    port: ${SPRING_R2DBC_PORT_AUTH:5432}
-    database: ${SPRING_R2DBC_DATABASE_AUTH:users}
-    schema: "public"
-    username: ${SPRING_R2DBC_USERNAME_AUTH:sm}
-    password: ${SPRING_R2DBC_PASSWORD_AUTH:1234}
+    host: ${SPRING_R2DBC_HOST_AUTH}
+    port: ${SPRING_R2DBC_PORT_AUTH}
+    database: ${SPRING_R2DBC_DATABASE_AUTH}
+    schema: ${SPRING_R2DBC_SCHEMA_AUTH}
+    username: ${SPRING_R2DBC_USERNAME_AUTH}
+    password: ${SPRING_R2DBC_PASSWORD_AUTH}
 
 springdoc:
   swagger-ui:
-    path: "/api/doc/swagger-ui.html"
+    path: "/auth/api/doc/swagger-ui.html"
   api-docs:
-    path: "/api/doc/api-docs"
+    path: "/auth/api/doc/api-docs"
 
 routes:
   paths:
-    users: "/api/v1/users"
-    userByIdentityDocument: "/api/v1/users/userByIdentityDocument/{identityDocument}"
-    userByEmail: "/api/v1/users/userByEmail/{email}"
-    login: "/api/v1/login"
+    users: "/auth/api/v1/users"
+    userByIdentityDocument: "/auth/api/v1/users/userByIdentityDocument/{identityDocument}"
+    userByEmail: "/auth/api/v1/users/userByEmail/{email}"
+    login: "/auth/api/v1/login"
 
 security:
   jwt:
-    keys-location:
-      private: ${JWT_PRIVATE_KEY:classpath:keys/private_key.pem}
-      public: ${JWT_PUBLIC_KEY:classpath:keys/public_key.pem}
-    expiration: 900000
+    keys:
+      private: ${JWT_PRIVATE_KEY}
+      public: ${JWT_PUBLIC_KEY}
+    expiration: ${JWT_EXPIRATION}
